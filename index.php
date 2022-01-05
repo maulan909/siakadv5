@@ -1,43 +1,44 @@
 <?php
 session_start();
-// error_reporting(0);
+error_reporting(0);
 include "config/koneksi.php";
 include "config/library.php";
 include "config/fungsi_indotgl.php";
 include "config/fungsi_seo.php";
+
 if (isset($_SESSION['id'])) {
-    if ($_SESSION[level] == 'superuser') {
-        $iden = mysql_fetch_array(mysql_query("SELECT * FROM rb_users where id_user='$_SESSION[id]'"));
-        $nama =  $iden[nama_lengkap];
+    if ($_SESSION['level'] == 'superuser') {
+        $iden = mysql_fetch_array(mysql_query("SELECT * FROM rb_users where id_user = " . $_SESSION['id']));
+        $nama =  $iden['nama_lengkap'];
         $level = 'Administrator';
         $foto = 'dist/img/user2.jpg';
-    } elseif ($_SESSION[level] == 'kepala') {
-        $iden = mysql_fetch_array(mysql_query("SELECT * FROM rb_users where id_user='$_SESSION[id]'"));
-        $gu = mysql_fetch_array(mysql_query("SELECT * FROM rb_guru where nip='$iden[username]'"));
-        $nama =  $iden[nama_lengkap];
+    } elseif ($_SESSION['level'] == 'kepala') {
+        $iden = mysql_fetch_array(mysql_query("SELECT * FROM rb_users where id_user = " . $_SESSION['id']));
+        $gu = mysql_fetch_array(mysql_query("SELECT * FROM rb_guru where nip = " . $iden['username']));
+        $nama =  $iden['nama_lengkap'];
         $level = 'Kepala Sekolah';
-        if (trim($gu[foto]) == '') {
+        if (trim($gu['foto']) == '') {
             $foto = 'foto_siswa/no-image.jpg';
         } else {
-            $foto = 'foto_pegawai/' . $gu[foto];
+            $foto = 'foto_pegawai/' . $gu['foto'];
         }
-    } elseif ($_SESSION[level] == 'guru') {
-        $iden = mysql_fetch_array(mysql_query("SELECT * FROM rb_guru where nip='$_SESSION[id]'"));
-        $nama =  $iden[nama_guru];
+    } elseif ($_SESSION['level'] == 'guru') {
+        $iden = mysql_fetch_array(mysql_query("SELECT * FROM rb_guru where nip = " . $_SESSION['id']));
+        $nama =  $iden['nama_guru'];
         $level = 'Guru / Pengajar';
-        if (trim($iden[foto]) == '') {
+        if (trim($iden['foto']) == '') {
             $foto = 'foto_siswa/no-image.jpg';
         } else {
-            $foto = 'foto_pegawai/' . $iden[foto];
+            $foto = 'foto_pegawai/' . $iden['foto'];
         }
-    } elseif ($_SESSION[level] == 'siswa') {
-        $iden = mysql_fetch_array(mysql_query("SELECT * FROM rb_siswa where nisn='$_SESSION[id]'"));
-        $nama =  $iden[nama];
+    } elseif ($_SESSION['level'] == 'siswa') {
+        $iden = mysql_fetch_array(mysql_query("SELECT * FROM rb_siswa where nisn = " . $_SESSION['id']));
+        $nama =  $iden['nama'];
         $level = 'Siswa / Murid';
-        if (trim($iden[foto]) == '') {
+        if (trim($iden['foto']) == '') {
             $foto = 'foto_siswa/no-image.jpg';
         } else {
-            $foto = 'foto_siswa/' . $iden[foto];
+            $foto = 'foto_siswa/' . $iden['foto'];
         }
     }
 
@@ -64,7 +65,7 @@ if (isset($_SESSION['id'])) {
         <!-- Theme style -->
         <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
         <!-- AdminLTE Skins. Choose a skin from the css/skins
-         folder instead of downloading all of them to reduce the load. -->
+        folder instead of downloading all of them to reduce the load. -->
         <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
         <!-- iCheck -->
         <link rel="stylesheet" href="plugins/iCheck/flat/blue.css">
@@ -78,6 +79,7 @@ if (isset($_SESSION['id'])) {
         <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker-bs3.css">
         <!-- bootstrap wysihtml5 - text editor -->
         <link rel="stylesheet" href="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+        <link rel="stylesheet" href="dist/css/owl.carousel.min.css">
         <style type="text/css">
             .files {
                 position: absolute;
@@ -91,18 +93,6 @@ if (isset($_SESSION['id'])) {
                 color: transparent;
             }
         </style>
-        <script type="text/javascript" src="plugins/jQuery/jquery-1.12.3.min.js"></script>
-        <script language="javascript" type="text/javascript">
-            var maxAmount = 160;
-
-            function textCounter(textField, showCountField) {
-                if (textField.value.length > maxAmount) {
-                    textField.value = textField.value.substring(0, maxAmount);
-                } else {
-                    showCountField.value = maxAmount - textField.value.length;
-                }
-            }
-        </script>
     </head>
 
     <body class="hold-transition skin-blue sidebar-mini">
@@ -113,11 +103,11 @@ if (isset($_SESSION['id'])) {
 
             <aside class="main-sidebar">
                 <?php
-                if ($_SESSION[level] == 'siswa') {
+                if ($_SESSION['level'] == 'siswa') {
                     include "menu-siswa.php";
-                } elseif ($_SESSION[level] == 'guru') {
+                } elseif ($_SESSION['level'] == 'guru') {
                     include "menu-guru.php";
-                } elseif ($_SESSION[level] == 'kepala') {
+                } elseif ($_SESSION['level'] == 'kepala') {
                     include "menu-kepsek.php";
                 } else {
                     include "menu-admin.php";
@@ -132,11 +122,15 @@ if (isset($_SESSION['id'])) {
 
                 <section class="content">
                     <?php
-                    if ($_GET[view] == 'home' or $_GET[view] == '') {
-                        if ($_SESSION[level] == 'siswa') {
-                            include "application/home_siswa.php";
-                        } elseif ($_SESSION[level] == 'guru') {
-                            include "application/home_guru.php";
+                    $view = '';
+                    if (isset($_GET['view'])) {
+                        $view = $_GET['view'];
+                    }
+                    if ($view == 'home' || $view == '') {
+                        if ($_SESSION['level'] == 'siswa') {
+                            include "application/dashboard.php";
+                        } elseif ($_SESSION['level'] == 'guru') {
+                            include "application/dashboard.php";
                         } else {
                             echo "<div class='row'>";
                             include "application/home_admin_row1.php";
@@ -145,268 +139,298 @@ if (isset($_SESSION['id'])) {
                             include "application/home_admin_row2.php";
                             echo "</div>";
                         }
-                    } elseif ($_GET[view] == 'psbmenu') {
+                    } elseif ($view == 'psbmenu') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/psb_menu.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'psbhalaman') {
+                    } elseif ($view == 'psbhalaman') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/psb_halaman.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'psbsma') {
+                    } elseif ($view == 'psbsma') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/psb_pendaftaran.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'psbsmk') {
+                    } elseif ($view == 'psbsmk') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/psb_pendaftaran.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'psbsmp') {
+                    } elseif ($view == 'psbsmp') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/psb_pendaftaran.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'psbaktivasi') {
+                    } elseif ($view == 'psbaktivasi') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/psb_aktivasi.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'journalkbm') {
+                    } elseif ($view == 'journalkbm') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/journal_semua.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'journalguru') {
+                    } elseif ($view == 'journalguru') {
                         cek_session_guru();
                         echo "<div class='row'>";
                         include "application/journal_guru.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'kompetensiguru') {
+                    } elseif ($view == 'kompetensiguru') {
                         cek_session_guru();
                         echo "<div class='row'>";
                         include "application/kompetensidasar_guru.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'siswa') {
+                    } elseif ($view == 'siswa') {
                         echo "<div class='row'>";
                         include "application/master_siswa.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'guru') {
+                    } elseif ($view == 'guru') {
                         cek_session_guru();
                         echo "<div class='row'>";
                         include "application/master_guru.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'wakilkepala') {
+                    } elseif ($view == 'wakilkepala') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_wakilkepala.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'admin') {
+                    } elseif ($view == 'admin') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_admin.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'kelas') {
+                    } elseif ($view == 'kelas') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_kelas.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'tahunakademik') {
+                    } elseif ($view == 'tahunakademik') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_tahun_akademik.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'gedung') {
+                    } elseif ($view == 'gedung') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_gedung.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'ruangan') {
+                    } elseif ($view == 'ruangan') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_ruangan.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'golongan') {
+                    } elseif ($view == 'golongan') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_golongan.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'ptk') {
+                    } elseif ($view == 'ptk') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_ptk.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'matapelajaran') {
+                    } elseif ($view == 'matapelajaran') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_matapelajaran.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'jadwalpelajaran') {
+                    } elseif ($view == 'jadwalpelajaran') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_jadwalpelajaran.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'jurusan') {
+                    } elseif ($view == 'jurusan') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_jurusan.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'kurikulum') {
+                    } elseif ($view == 'kurikulum') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_kurikulum.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'predikat') {
+                    } elseif ($view == 'predikat') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_predikat.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'statuspegawai') {
+                    } elseif ($view == 'statuspegawai') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_statuspegawai.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'identitas') {
+                    } elseif ($view == 'identitas') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_identitas.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'kelompokmapel') {
+                    } elseif ($view == 'kelompokmapel') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_kelompokmapel.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'kompetensidasar') {
+                    } elseif ($view == 'kompetensidasar') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_kompetensidasar.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'penilaiandiri') {
+                    } elseif ($view == 'penilaiandiri') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_penilaiandiri.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'penilaianteman') {
+                    } elseif ($view == 'penilaianteman') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/master_penilaianteman.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'absensiswa') {
+                    } elseif ($view == 'absensiswa') {
                         cek_session_guru();
                         echo "<div class='row'>";
                         include "application/absensi_siswa.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'rekapabsensiswa') {
+                    } elseif ($view == 'rekapabsensiswa') {
                         cek_session_guru();
                         echo "<div class='row'>";
                         include "application/absensi_siswa_rekap.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'absenguru') {
+                    } elseif ($view == 'absenguru') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/absensi_guru.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'bahantugas') {
+                    } elseif ($view == 'bahantugas') {
                         echo "<div class='row'>";
                         include "application/bahan_tugas.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'soal') {
+                    } elseif ($view == 'soal') {
                         echo "<div class='row'>";
                         include "application/quiz_ujian_soal.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'forum') {
+                    } elseif ($view == 'forum') {
                         echo "<div class='row'>";
                         include "application/forum_diskusi.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'penilaiandirisiswa') {
+                    } elseif ($view == 'penilaiandirisiswa') {
                         echo "<div class='row'>";
                         include "application/penilaiandiri_siswa.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'penilaiantemansiswa') {
+                    } elseif ($view == 'penilaiantemansiswa') {
                         echo "<div class='row'>";
                         include "application/penilaianteman_siswa.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'raport') {
+                    } elseif ($view == 'raport') {
                         echo "<div class='row'>";
                         include "application/raport.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'raportuts') {
+                    } elseif ($view == 'raportuts') {
                         echo "<div class='row'>";
                         include "application/raport_uts.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'raportcetak') {
+                    } elseif ($view == 'raportcetak') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/raport_cetak.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'raportcetakuts') {
+                    } elseif ($view == 'raportcetakuts') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/raport_cetak_uts.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'capaianhasilbelajar') {
+                    } elseif ($view == 'capaianhasilbelajar') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/raport/raport_capaian_hasil_belajar.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'extrakulikuler') {
+                    } elseif ($view == 'extrakulikuler') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/raport/raport_extrakulikuler.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'prestasi') {
+                    } elseif ($view == 'prestasi') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/raport/raport_prestasi.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'bukuinduk') {
+                    } elseif ($view == 'bukuinduk') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/buku_induk.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'dokumentasi') {
+                    } elseif ($view == 'dokumentasi') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/dokumentasi.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'dokumentasiguru') {
+                    } elseif ($view == 'dokumentasiguru') {
                         cek_session_guru();
                         echo "<div class='row'>";
                         include "application/dokumentasi_guru.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'dokumentasisiswa') {
+                    } elseif ($view == 'dokumentasisiswa') {
                         cek_session_siswa();
                         echo "<div class='row'>";
                         include "application/dokumentasi_siswa.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'sms') {
+                    } elseif ($view == 'sms') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/sms/sms.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'broadcast') {
+                    } elseif ($view == 'broadcast') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/sms/broadcast.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'autoreply') {
+                    } elseif ($view == 'autoreply') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/sms/autoreply.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'smstoweb') {
+                    } elseif ($view == 'smstoweb') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/sms/sms_to_web.php";
                         echo "</div>";
-                    } elseif ($_GET[view] == 'outboxautoreply') {
+                    } elseif ($view == 'outboxautoreply') {
                         cek_session_admin();
                         echo "<div class='row'>";
                         include "application/sms/outbox_autoreply.php";
                         echo "</div>";
+                    } else if ($view == 'jadwal-pelajaran') {
+                        if ($_SESSION['level'] == 'siswa') {
+                            include "application/home_siswa.php";
+                        } else if ($_SESSION['level'] == 'guru') {
+                            include "application/home_guru.php";
+                        }
+                    } else if ($view == 'rapor') {
+                    ?>
+                        <div class="row">
+                            <?php
+                            if ($_SESSION['level'] == 'guru' || $_SESSION['level'] == 'superuser') {
+                                include 'application/raport2.php';
+                            } else if ($_SESSION['level'] == 'siswa') {
+                                include 'application/raport-siswa.php';
+                            }
+                            ?>
+                        </div>
+                    <?php
+                    } else if ($view == 'raport-list') {
+                    ?>
+                        <div class="row">
+                            <?php
+                            if ($_SESSION['level'] == 'guru' || $_SESSION['level'] == 'superuser') {
+                                include 'application/raport-list-guru.php';
+                            } else if ($_SESSION['level'] == 'siswa') {
+                                include 'application/raport2.php';
+                            }
+                            ?>
+                        </div>
+                    <?php
                     }
                     ?>
                 </section>
@@ -488,7 +512,7 @@ if (isset($_SESSION['id'])) {
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myModalLabel">Berikan Siswa Nilai Essai</h4>
                     </div>
-                    <form method='POST' action='index.php?view=soal&act=semuajawabansiswa&jdwl=<?php echo $_GET[jdwl]; ?>&idsoal=<?php echo $_GET[idsoal]; ?>&id=<?php echo $_GET[id]; ?>&kd=<?php echo $_GET[kd]; ?>&noinduk=<?php echo $_GET[noinduk]; ?>' class="form-horizontal">
+                    <form method='POST' action='index.php?view=soal&act=semuajawabansiswa&jdwl=<?php echo $_GET['jdwl']; ?>&idsoal=<?php echo $_GET['idsoal']; ?>&id=<?php echo $_GET['id']; ?>&kd=<?php echo $_GET['kd']; ?>&noinduk=<?php echo $_GET['noinduk']; ?>' class="form-horizontal">
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="inputEmail3" class="col-sm-2 control-label">Nilai Essai</label>
@@ -513,7 +537,7 @@ if (isset($_SESSION['id'])) {
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myModalLabel">Tambahkan Soal Essai</h4>
                     </div>
-                    <form method='POST' action='index.php?view=soal&act=semuasoal&jdwl=<?php echo $_GET[jdwl]; ?>&idsoal=<?php echo $_GET[idsoal]; ?>&id=<?php echo $_GET[id]; ?>&kd=<?php echo $_GET[kd]; ?>' class="form-horizontal">
+                    <form method='POST' action='index.php?view=soal&act=semuasoal&jdwl=<?php echo $_GET['jdwl']; ?>&idsoal=<?php echo $_GET['idsoal']; ?>&id=<?php echo $_GET['id']; ?>&kd=<?php echo $_GET['kd']; ?>' class="form-horizontal">
                         <div class="modal-body">
 
 
@@ -540,7 +564,7 @@ if (isset($_SESSION['id'])) {
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <h4 class="modal-title" id="myModalLabel">Tambahkan Soal Objektif</h4>
                     </div>
-                    <form method='POST' action='index.php?view=soal&act=semuasoal&jdwl=<?php echo $_GET[jdwl]; ?>&idsoal=<?php echo $_GET[idsoal]; ?>&id=<?php echo $_GET[id]; ?>&kd=<?php echo $_GET[kd]; ?>' class="form-horizontal">
+                    <form method='POST' action='index.php?view=soal&act=semuasoal&jdwl=<?php echo $_GET['jdwl']; ?>&idsoal=<?php echo $_GET['idsoal']; ?>&id=<?php echo $_GET['id']; ?>&kd=<?php echo $_GET['kd']; ?>' class="form-horizontal">
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="inputEmail3" class="col-sm-2 control-label">Soal</label>
@@ -599,6 +623,38 @@ if (isset($_SESSION['id'])) {
                 </div>
             </div>
         </div>
+        <!-- <script type="text/javascript" src="plugins/jQuery/jquery-1.12.3.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+        <script language="javascript" type="text/javascript">
+            $(document).ready(function() {
+                $('.owl-carousel').owlCarousel({
+                    items: 1,
+                    autoplay: true,
+                    lazyLoad: false,
+                    loop: true,
+                    margin: 20,
+                    /*
+                    animateOut: 'fadeOut',
+                    animateIn: 'fadeIn',
+                    */
+                    responsiveClass: true,
+                    autoHeight: true,
+                    autoplayTimeout: 7000,
+                    smartSpeed: 800,
+                    responsive: false
+                });
+            });
+            var maxAmount = 160;
+
+            function textCounter(textField, showCountField) {
+                if (textField.value.length > maxAmount) {
+                    textField.value = textField.value.substring(0, maxAmount);
+                } else {
+                    showCountField.value = maxAmount - textField.value.length;
+                }
+            }
+        </script>
+        <script src="dist/js/owl.carousel.min.js"></script>
     </body>
 
     </html>

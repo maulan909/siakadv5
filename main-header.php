@@ -1,49 +1,49 @@
 <style type="text/css">
-  .sekolah{
+  .sekolah {
     float: left;
     background-color: transparent;
     background-image: none;
     padding: 15px 15px;
     font-family: fontAwesome;
-    color:#fff;
+    color: #fff;
   }
 
-  .sekolah:hover{
-    color:#fff;
+  .sekolah:hover {
+    color: #fff;
   }
 </style>
-        <!-- Logo -->
-        <a href="index.php" class="logo">
-          <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"></span>
-          <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>S I A K A D</b></span>
-        </a>
-        <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar navbar-static-top" role="navigation">
-          <!-- Sidebar toggle button-->
-          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-            <span class="sr-only">Toggle navigation</span>
-          </a>
+<!-- Logo -->
+<a href="index.php" class="logo">
+  <!-- mini logo for sidebar mini 50x50 pixels -->
+  <span class="logo-mini"></span>
+  <!-- logo for regular state and mobile devices -->
+  <span class="logo-lg"><b>S I A K A D</b></span>
+</a>
+<!-- Header Navbar: style can be found in header.less -->
+<nav class="navbar navbar-static-top" role="navigation">
+  <!-- Sidebar toggle button-->
+  <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+    <span class="sr-only">Toggle navigation</span>
+  </a>
 
-          <div class="navbar-custom-menu">
-            <ul class="nav navbar-nav">
-              <!-- User Account: style can be found in dropdown.less -->
-              <li class="dropdown user user-menu">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img src="<?php echo $foto; ?>" class="user-image" alt="User Image">
-                  <span class="hidden-xs"><?php echo $nama; ?></span> <span class='caret'></span>
-                </a>
-                <ul class="dropdown-menu">
-                  <!-- User image -->
-                  <li class="user-header">
-                    <img src="<?php echo $foto; ?>" class="img-circle" alt="User Image">
-                    <p>
-                      <?php echo $nama; ?>
-                      <small><?php echo $level; ?></small>
-                    </p>
-                  </li>
-                   <!-- Menu Body --
+  <div class="navbar-custom-menu">
+    <ul class="nav navbar-nav">
+      <!-- User Account: style can be found in dropdown.less -->
+      <li class="dropdown user user-menu">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <img src="<?php echo $foto; ?>" class="user-image" alt="User Image">
+          <span class="hidden-xs"><?php echo $nama; ?></span> <span class='caret'></span>
+        </a>
+        <ul class="dropdown-menu">
+          <!-- User image -->
+          <li class="user-header">
+            <img src="<?php echo $foto; ?>" class="img-circle" alt="User Image">
+            <p>
+              <?php echo $nama; ?>
+              <small><?php echo $level; ?></small>
+            </p>
+          </li>
+          <!-- Menu Body --
                   <li class="user-body">
                     <div class="col-xs-4 text-center">
                       <a href="#">Followers</a>
@@ -56,29 +56,29 @@
                     </div>
                   </li>
                   -- Menu Footer -->
-                  <li class="user-footer">
-                    <div class="pull-left">
-                      <a href="index.php" class="btn btn-default btn-flat">DASHBOARD</a>
-                    </div>
-                    <div class="pull-right">
-                      <?php 
-                        if ($_SESSION[level]=='superuser'){
-                            echo "<a href='index.php?view=admin&act=edit&id=$_SESSION[id]' class='btn btn-default btn-flat'>Edit Profile</a>";
-                        }elseif($_SESSION[level]=='kepala'){
-                            echo "<a href='index.php?view=admin&act=edit&id=$_SESSION[id]' class='btn btn-default btn-flat'>Edit Profile</a>";    
-                        }elseif($_SESSION[level]=='guru'){
-                            echo "<a href='index.php?view=guru&act=detailguru&id=$_SESSION[id]' class='btn btn-default btn-flat'>View Profile</a>";
-                        }elseif($_SESSION[level]=='siswa'){
-                            echo "<a href='index.php?view=siswa&act=detailsiswa&id=$_SESSION[id]' class='btn btn-default btn-flat'>View Profile</a>";
-                        }
-                      ?>
-                    </div>
-                  </li>
-                </ul>
-              </li>
-              <li><a href="logout.php" >Logout</a></li>
+          <li class="user-footer">
+            <div class="pull-left">
+              <a href="index.php" class="btn btn-default btn-flat">DASHBOARD</a>
+            </div>
+            <div class="pull-right">
+              <?php
+              if ($_SESSION[level] == 'superuser') {
+                echo "<a href='index.php?view=admin&act=edit&id=$_SESSION[id]' class='btn btn-default btn-flat'>Edit Profile</a>";
+              } elseif ($_SESSION[level] == 'kepala') {
+                echo "<a href='index.php?view=admin&act=edit&id=$_SESSION[id]' class='btn btn-default btn-flat'>Edit Profile</a>";
+              } elseif ($_SESSION[level] == 'guru') {
+                echo "<a href='index.php?view=guru&act=detailguru&id=$_SESSION[id]' class='btn btn-default btn-flat'>View Profile</a>";
+              } elseif ($_SESSION[level] == 'siswa') {
+                echo "<a href='index.php?view=siswa&act=detailsiswa&id=$_SESSION[id]' class='btn btn-default btn-flat'>View Profile</a>";
+              }
+              ?>
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li><a href="logout.php">Logout</a></li>
 
-                            <!-- Messages: style can be found in dropdown.less--
+      <!-- Messages: style can be found in dropdown.less--
               <li class="dropdown messages-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <i class="fa fa-envelope-o"></i> Pesan Masuk
@@ -155,10 +155,10 @@
                 </ul>
               </li> -->
 
-              <!-- Control Sidebar Toggle Button --
+      <!-- Control Sidebar Toggle Button --
               <li>
                 <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
               </li> -->
-            </ul>
-          </div>
-        </nav>
+    </ul>
+  </div>
+</nav>
