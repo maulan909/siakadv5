@@ -27,6 +27,8 @@
         <!-- <li><a href="index.php?view=raport&act=detailsiswa"><i class="fa fa-circle-o"></i> Data Nilai Raport</a></li> -->
       </ul>
     </li>
+    <li><a href="index.php?view=tahfizh"><i class="fa fa-newspaper-o"></i> Penilaian Tahfizh</a></li>
+    <li><a href="index.php?view=tahsin"><i class="fa fa-newspaper-o"></i> Penilaian Tahsin</a></li>
     <li><a href="index.php?view=dokumentasi"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
   </ul>
 </section>

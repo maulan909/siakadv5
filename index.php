@@ -443,6 +443,10 @@ if (isset($_SESSION['id'])) {
                             <?php
                             if ($_SESSION['level'] == 'guru' || $_SESSION['level'] == 'superuser') {
                                 include 'application/tahfizh-guru.php';
+                            } else if ($_SESSION['level'] == 'siswa') {
+                                include 'application/tahfizh-siswa.php';
+                            } else {
+                                header('location:index.php');
                             }
                             ?>
                         </div>
@@ -453,6 +457,10 @@ if (isset($_SESSION['id'])) {
                             <?php
                             if ($_SESSION['level'] == 'guru' || $_SESSION['level'] == 'superuser') {
                                 include 'application/tahsin-guru.php';
+                            } else if ($_SESSION['level'] == 'siswa') {
+                                include 'application/tahsin-siswa.php';
+                            } else {
+                                header('location:index.php');
                             }
                             ?>
                         </div>
