@@ -80,6 +80,8 @@ if (isset($_SESSION['id'])) {
         <!-- bootstrap wysihtml5 - text editor -->
         <link rel="stylesheet" href="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
         <link rel="stylesheet" href="dist/css/owl.carousel.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css">
         <style type="text/css">
             .files {
                 position: absolute;
@@ -91,6 +93,10 @@ if (isset($_SESSION['id'])) {
                 opacity: 0;
                 background-color: transparent;
                 color: transparent;
+            }
+
+            thead th {
+                text-align: center;
             }
         </style>
     </head>
@@ -431,6 +437,26 @@ if (isset($_SESSION['id'])) {
                             ?>
                         </div>
                     <?php
+                    } else if ($view == 'tahfizh') {
+                    ?>
+                        <div class="row">
+                            <?php
+                            if ($_SESSION['level'] == 'guru' || $_SESSION['level'] == 'superuser') {
+                                include 'application/tahfizh-guru.php';
+                            }
+                            ?>
+                        </div>
+                    <?php
+                    } else if ($view == 'tahsin') {
+                    ?>
+                        <div class="row">
+                            <?php
+                            if ($_SESSION['level'] == 'guru' || $_SESSION['level'] == 'superuser') {
+                                include 'application/tahsin-guru.php';
+                            }
+                            ?>
+                        </div>
+                    <?php
                     }
                     ?>
                 </section>
@@ -655,6 +681,14 @@ if (isset($_SESSION['id'])) {
             }
         </script>
         <script src="dist/js/owl.carousel.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            const view = "<?= $_GET['view']; ?>";
+            const kelas = "<?= $_GET['kelas'] ?>";
+            const siswa = "<?= $_GET['siswa'] ?>";
+            const url = 'http://localhost/siakadv/';
+        </script>
+        <script src="dist/js/script.js"></script>
     </body>
 
     </html>

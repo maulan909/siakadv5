@@ -30,6 +30,18 @@
         <li><a href="index.php?view=raport&act=detailguru"><i class="fa fa-circle-o"></i> Input Nilai Raport</a></li> -->
       </ul>
     </li>
+    <?php
+    $tampil = mysql_num_rows(mysql_query("SELECT * FROM rb_jadwal_pelajaran WHERE kode_pelajaran = 'T1' AND nip = '" . $_SESSION['id'] . "'"));
+    ?>
+    <?php if ($tampil > 0) : ?>
+      <li><a href="index.php?view=tahfizh"><i class="fa fa-newspaper-o"></i> Penilaian Tahfizh</a></li>
+    <?php endif; ?>
+    <?php
+    $tampil = mysql_num_rows(mysql_query("SELECT * FROM rb_jadwal_pelajaran WHERE kode_pelajaran = 'T2' AND nip = '" . $_SESSION['id'] . "'"));
+    ?>
+    <?php if ($tampil > 0) : ?>
+      <li><a href="index.php?view=tahsin"><i class="fa fa-newspaper-o"></i> Penilaian Tahsin</a></li>
+    <?php endif; ?>
     <li><a href="index.php?view=dokumentasiguru"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
   </ul>
 </section>
