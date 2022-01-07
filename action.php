@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-// error_reporting(0);
+error_reporting(0);
 include "config/koneksi.php";
 include "config/library.php";
 include "config/fungsi_indotgl.php";
@@ -64,6 +64,36 @@ if ($view == 'tahfizh') {
         $ayat_hafalan = $_POST['ayat_hafalan'];
         mysql_query("INSERT INTO rb_tahsin VALUES(null, '$siswa_id', '$kelas_kode', '$tatap_muka', '$tanggal', '$jilid_surat', '$hal_ayat_ummi', '$juz_ummi', '$hal_gharib', '$materi_gharib', '$hal_tajwid', '$materi_tajwid', '$surat_hafalan', '$ayat_hafalan')");
         $_SESSION['alert'] = 'Tambah Penilaian Berhasil';
+        $_SESSION['type'] = 'success';
+        header('location:index.php?view=' . $_GET['view'] . '&kelas=' . $_GET['kelas'] . '&siswa=' . $_GET['siswa']);
+    } else if ($act == 'get') {
+        echo json_encode(mysql_fetch_assoc(mysql_query("SELECT t.*, s.nama_surah FROM rb_tahsin t LEFT JOIN rb_surah s ON s.id = t.surat_hafalan WHERE t.id = '" . $_POST['id'] . "'")));
+    } else if ($act == 'edit') {
+        $tatap_muka = $_POST['tatap_muka'];
+        $tanggal = $_POST['tanggal'];
+        $jilid_surat = $_POST['jilid_surat'];
+        $hal_ayat_ummi = $_POST['hal_ayat_ummi'];
+        $juz_ummi = $_POST['juz_ummi'];
+        $hal_gharib = $_POST['hal_gharib'];
+        $materi_gharib = $_POST['materi_gharib'];
+        $hal_tajwid = $_POST['hal_tajwid'];
+        $materi_tajwid = $_POST['materi_tajwid'];
+        $surat_hafalan = $_POST['surat_hafalan'];
+        $ayat_hafalan = $_POST['ayat_hafalan'];
+        mysql_query("UPDATE rb_tahsin SET tatap_muka = '" . $tatap_muka . "',
+                                            tanggal = '" . $tanggal . "',
+                                            jilid_surat = '" . $jilid_surat . "',
+                                            hal_ayat_ummi = '" . $hal_ayat_ummi . "',
+                                            juz_ummi = '" . $juz_ummi . "',
+                                            hal_gharib = '" . $hal_gharib . "',
+                                            materi_gharib = '" . $materi_gharib . "',
+                                            hal_tajwid = '" . $hal_tajwid . "',
+                                            materi_tajwid = '" . $materi_tajwid . "',
+                                            surat_hafalan = '" . $surat_hafalan . "',
+                                            ayat_hafalan = '" . $ayat_hafalan . "'
+                                            WHERE id = '" . $_POST['id'] . "'
+                                            ");
+        $_SESSION['alert'] = 'Edit Penilaian Berhasil';
         $_SESSION['type'] = 'success';
         header('location:index.php?view=' . $_GET['view'] . '&kelas=' . $_GET['kelas'] . '&siswa=' . $_GET['siswa']);
     }

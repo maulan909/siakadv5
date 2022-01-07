@@ -46,7 +46,6 @@ $siswa = mysql_fetch_assoc(mysql_query("SELECT * FROM rb_siswa WHERE nisn = '" .
                         <th>Total Lembar</th>
                         <th>Rata-rata Nilai Setoran</th>
                         <th>Catatan Muhafizh</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,9 +62,6 @@ $siswa = mysql_fetch_assoc(mysql_query("SELECT * FROM rb_siswa WHERE nisn = '" .
                             <td><?= $l['total_lembar']; ?></td>
                             <td><?= $l['rata_nilai_setoran']; ?></td>
                             <td><?= $l['catatan_muhafizh']; ?></td>
-                            <td>
-                                <button class="btn btn-info btn-sm buttonEditTahfizh" data-id="<?= $l['id']; ?>" data-toggle="modal" data-target="#modalTahfizh">Edit</button>
-                            </td>
                         </tr>
                     <?php
                     }

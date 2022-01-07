@@ -10,7 +10,7 @@
             if (!isset($_POST['action'])) {
                 $allowed_extension = ['pdf'];
                 $jumlahFile = count($_FILES['rapor']['name']);
-                if ($jumlahFile == 2) {
+                if ($jumlahFile == 4) {
                     $dataFile = [];
                     for ($i = 0; $i < $jumlahFile; $i++) {
                         $namaFile = $_FILES['rapor']['name'][$i];
