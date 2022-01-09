@@ -471,7 +471,7 @@ if (isset($_SESSION['id'])) {
                             <?php
                             if ($_SESSION['level'] == 'superuser') {
                                 include 'application/kaldik-superuser.php';
-                            } else if ($_SESSION['level'] == 'guru' || $_SESSION['level'] == 'guru') {
+                            } else if ($_SESSION['level'] == 'guru' || $_SESSION['level'] == 'siswa') {
                                 include 'application/kaldik.php';
                             } else {
                             ?>

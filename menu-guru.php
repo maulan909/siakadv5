@@ -14,7 +14,7 @@
   <ul class="sidebar-menu">
     <li class="header" style='color:#fff; text-transform:uppercase; border-bottom:2px solid #00c0ef'>MENU <?php echo $level; ?></li>
     <li><a href="index.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
-    <li><a href="index.php?view=kaldik"><i class="fa fa-circle-o"></i> Data Kalender Akademik</a></li>
+    <li><a href="index.php?view=kaldik"><i class="fa fa-calendar"></i>Kalender Akademik</a></li>
     <li><a href="index.php?view=jadwal-pelajaran"><i class="fa fa-calendar"></i> <span>Jadwal Pelajaran</span></a></li>
     <li><a href="index.php?view=absensiswa&act=detailabsenguru"><i class="fa fa-th-large"></i> <span>Absensi Siswa</span></a></li>
     <li><a href="index.php?view=bahantugas&act=listbahantugasguru"><i class="fa fa-file"></i><span>Bahan dan Tugas</span></a></li>
