@@ -6,7 +6,7 @@ date_default_timezone_set('Asia/Jakarta');
 $server = "localhost";
 $username = "root";
 $password = "";
-$database = "db_siakad";
+$database = "db_siakad_sekolah";
 
 mysql_connect($server, $username, $password);
 mysql_select_db($database);

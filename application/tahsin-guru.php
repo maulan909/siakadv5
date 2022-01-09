@@ -7,7 +7,7 @@ if ($_SESSION['level'] != 'guru') {
 <?php
     exit;
 }
-$tampil = mysql_num_rows(mysql_query("SELECT * FROM rb_jadwal_pelajaran WHERE nip = '" . $_SESSION['id'] . "' AND kode_pelajaran = 'T1'"));
+$tampil = mysql_num_rows(mysql_query("SELECT * FROM rb_jadwal_pelajaran WHERE nip = '" . $_SESSION['id'] . "' AND kode_pelajaran = 'T2'"));
 if ($tampil < 1) {
 ?>
     <script>
@@ -34,7 +34,7 @@ if (!isset($_GET['siswa'])) :
                     <select name="kelas" id="kelas" style="padding:4px;" required>
                         <option value="">-- Pilih Kelas --</option>
                         <?php
-                        $tahun = mysql_query("SELECT a.*, rb_kelas.nama_kelas FROM rb_jadwal_pelajaran a LEFT JOIN rb_kelas ON rb_kelas.kode_kelas = a.kode_kelas WHERE kode_pelajaran = 'T1' AND a.nip = '" . $_SESSION['id'] . "'");
+                        $tahun = mysql_query("SELECT a.*, rb_kelas.nama_kelas FROM rb_jadwal_pelajaran a LEFT JOIN rb_kelas ON rb_kelas.kode_kelas = a.kode_kelas WHERE kode_pelajaran = 'T2' AND a.nip = '" . $_SESSION['id'] . "'");
                         while ($t = mysql_fetch_assoc($tahun)) {
                         ?>
                             <option value="<?= $t['kode_kelas']; ?>" <?= isset($_GET['kelas']) && $_GET['kelas'] == $t['kode_kelas'] ? 'selected' : ''; ?>><?= $t['kode_kelas']; ?> - <?= $t['nama_kelas']; ?></option>

@@ -135,4 +135,25 @@ $(document).ready(function () {
             },
         });
     });
+    $('.btnDetailKD').on('click', function () {
+        $('#modalKaldikLabel').html('Detail');
+        $('#modalKaldik button[type=submit]').css('display', 'none');
+        $('#modalKaldik .form-group').css('display', 'none');
+        let img = document.querySelector('.modal-body img');
+        if (img) {
+            img.remove();
+        }
+        img = document.createElement('img');
+        img.src = $(this).data('kaldik');
+        img.setAttribute('class', 'img-responsive');
+        let modalContent = document.querySelector('.modal-body');
+        modalContent.appendChild(img);
+    });
+    $('.btnTambahKD').on('click', function () {
+        $('#modalKaldikLabel').html('Tambah Data Kalender Akademik');
+        $('#modalKaldik button[type=submit]').css('display', 'inline-block');
+        $('#modalKaldik .form-group').css('display', 'block');
+        let img = document.querySelector('.modal-body img');
+        img.remove();
+    });
 });

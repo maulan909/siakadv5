@@ -3,6 +3,15 @@
         window.location = 'index.php';
     </script>
 <?php endif; ?>
+<?php
+$check = mysql_num_rows(mysql_query("SELECT * FROM rb_kelas WHERE nip = '" . $_SESSION['id'] . "'"));
+if ($check < 1) { ?>
+    <script>
+        window.location = 'index.php';
+    </script>
+<?php
+}
+?>
 <div class="col-xs-12">
     <div class="box">
         <?php if (!isset($_GET['siswa'])) : ?>

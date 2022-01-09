@@ -3,6 +3,15 @@
         window.location = 'index.php';
     </script>
 <?php endif; ?>
+<?php
+$check = mysql_num_rows(mysql_query("SELECT * FROM rb_kelas WHERE nip = '" . $_SESSION['id'] . "'"));
+if ($check < 1) { ?>
+    <script>
+        window.location = 'index.php';
+    </script>
+<?php
+}
+?>
 <div class="col-xs-12">
     <?php
     if (!isset($_GET['siswa'])) {
@@ -10,7 +19,7 @@
             if (!isset($_POST['action'])) {
                 $allowed_extension = ['pdf'];
                 $jumlahFile = count($_FILES['rapor']['name']);
-                if ($jumlahFile == 4) {
+                if ($jumlahFile == 3) {
                     $dataFile = [];
                     for ($i = 0; $i < $jumlahFile; $i++) {
                         $namaFile = $_FILES['rapor']['name'][$i];
@@ -18,7 +27,7 @@
                         $fileType = pathinfo($namaFile, PATHINFO_EXTENSION);
                         $jenis = explode(' ', $namaFile);
                         if (in_array($fileType, $allowed_extension)) {
-                            if (in_array(strtolower($jenis[1]), ['dinas', 'pondok', 'kompetensi', 'tahsin'])) {
+                            if (in_array(strtolower($jenis[1]), ['dinas', 'pondok', 'kompetensi'])) {
                                 $uploadedName = randomStr(15);
                                 move_uploaded_file($tmp, 'dist/raport/' . $uploadedName . '.pdf');
                                 array_push($dataFile, [$uploadedName . '.pdf', $jenis[1]]);
@@ -82,8 +91,7 @@
                 if ($_POST['action'] == 'delete') {
                     $id_siswa = $_POST['id_siswa'];
                     $semester = date('m') < 7 ? 2 : 1;
-                    $files = mysql_query("SELECT rb_file_raport.*, rb_siswa.nama FROM rb_file_raport LEFT JOIN rb_siswa ON rb_siswa.id_siswa = rb_file_raport.id_siswa WHERE rb_file_raport.id_siswa = " . $id_siswa . " AND tahun_ujian = '" . date('Y') . "' AND semester = '" . $semester . "' AND jenis_ujian = '" . $_GET['type'] . "'");
-                    // var_dump(mysql_fetch_assoc($files));
+                    $files = mysql_query("SELECT rb_file_raport.*, rb_siswa.nama FROM rb_file_raport LEFT JOIN rb_siswa ON rb_siswa.id_siswa = rb_file_raport.id_siswa WHERE rb_file_raport.id_siswa = " . $id_siswa . " AND tahun_ujian = '" . date('Y') . "' AND semester = '" . $semester . "' AND jenis_ujian = '" . $_GET['type'] . "' AND rb_file_raport.kode_kelas = '" . $_GET['kelas'] . "'");
                     $nama = '';
                     while ($file = mysql_fetch_assoc($files)) {
                         $nama = $file['nama'];
@@ -93,7 +101,6 @@
                     }
                     $_SESSION['alert'] = 'Hapus Raport ' . strtoupper($_GET['type']) . ' Semester ' . $semester . ' Tahun ' . date('Y') . ' ' . $nama . ' Berhasil';
                     $_SESSION['type'] = 'success';
-                    // mysql_query("DELETE FROM rb_file_raport WHERE id_siswa = '$id_siswa' AND tahun_ujian = '" . date('Y') . "' AND semester = '" . date('m') < 7 ? 2 : 1 . "' AND jenis_ujian = '" . $_GET['type'] . "'");
                 }
             }
         }
@@ -155,27 +162,17 @@
                     <tbody>
                         <?php
 
-                        if ($_GET[kelas] != '' and $_GET[angkatan] != '') {
-                            $tampil = mysql_query("SELECT * FROM rb_siswa a LEFT JOIN rb_kelas b ON a.kode_kelas=b.kode_kelas 
-                                                LEFT JOIN rb_jenis_kelamin c ON a.id_jenis_kelamin=c.id_jenis_kelamin 
-                                                LEFT JOIN rb_jurusan d ON b.kode_jurusan=d.kode_jurusan 
-                                                where a.kode_kelas='$_GET[kelas]' AND a.angkatan='$_GET[angkatan]' ORDER BY a.id_siswa");
-                        } elseif ($_GET[kelas] != '' and $_GET[angkatan] == '') {
-                            $tampil = mysql_query("SELECT * FROM rb_siswa a LEFT JOIN rb_kelas b ON a.kode_kelas=b.kode_kelas 
+
+                        $tampil = mysql_query("SELECT * FROM rb_siswa a LEFT JOIN rb_kelas b ON a.kode_kelas=b.kode_kelas 
                                                 LEFT JOIN rb_jenis_kelamin c ON a.id_jenis_kelamin=c.id_jenis_kelamin 
                                                 LEFT JOIN rb_jurusan d ON b.kode_jurusan=d.kode_jurusan 
                                                 where a.kode_kelas='$_GET[kelas]' ORDER BY a.id_siswa");
-                        } elseif ($_GET[kelas] == '' and $_GET[angkatan] != '') {
-                            $tampil = mysql_query("SELECT * FROM rb_siswa a LEFT JOIN rb_kelas b ON a.kode_kelas=b.kode_kelas 
-                                                LEFT JOIN rb_jenis_kelamin c ON a.id_jenis_kelamin=c.id_jenis_kelamin 
-                                                LEFT JOIN rb_jurusan d ON b.kode_jurusan=d.kode_jurusan 
-                                                where a.angkatan='$_GET[angkatan]' ORDER BY a.id_siswa");
-                        }
+
                         $no = 1;
                         while ($r = mysql_fetch_array($tampil)) {
                             $tahun = date('Y');
                             $semester = (date('m') < 7) ? 2 : 1;
-                            $cek = mysql_num_rows(mysql_query("SELECT * FROM rb_file_raport WHERE tahun_ujian = '" . $tahun . "' AND semester = '" . $semester . "' AND jenis_ujian = '" . $_GET['type'] . "' AND id_siswa = '" . $r['id_siswa'] . "'"));
+                            $cek = mysql_num_rows(mysql_query("SELECT * FROM rb_file_raport WHERE tahun_ujian = '" . $tahun . "' AND semester = '" . $semester . "' AND jenis_ujian = '" . $_GET['type'] . "' AND id_siswa = '" . $r['id_siswa'] . "' AND kode_kelas = '" . $r['kode_kelas'] . "'"));
                         ?>
                             <tr>
                                 <td><?= $no; ?></td>
@@ -190,6 +187,7 @@
                                         <form action="index.php?view=rapor&type=<?= $_GET['type']; ?>&kelas=<?= $_GET['kelas']; ?>" onsubmit="return confirm('Yakin ingin hapus?');" style="display:inline;" method="post">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="id_siswa" value="<?= $r['id_siswa']; ?>">
+                                            <input type="hidden" name="kelas" value="<?= $_GET['kelas']; ?>">
                                             <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                         </form>
                                     </td>
@@ -222,7 +220,7 @@
     } else {
         $semester = date('m') < 7 ? 2 : 1;
         $siswa = mysql_fetch_assoc(mysql_query("SELECT * FROM rb_siswa WHERE id_siswa = '$_GET[siswa]'"));
-        $raports = mysql_query("SELECT * FROM rb_file_raport WHERE id_siswa = '" . $_GET['siswa'] . "' AND jenis_ujian = '" . $_GET['type'] . "' AND tahun_ujian = '" . date('Y') . "' AND semester = '" . $semester . "'");
+        $raports = mysql_query("SELECT * FROM rb_file_raport WHERE id_siswa = '" . $_GET['siswa'] . "' AND jenis_ujian = '" . $_GET['type'] . "' AND tahun_ujian = '" . date('Y') . "' AND semester = '" . $semester . "' AND kode_kelas = '" . $siswa['kode_kelas'] . "'");
         if (mysql_num_rows($raports) < 1) {
         ?>
             <script>

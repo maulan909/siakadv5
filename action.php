@@ -97,6 +97,41 @@ if ($view == 'tahfizh') {
         $_SESSION['type'] = 'success';
         header('location:index.php?view=' . $_GET['view'] . '&kelas=' . $_GET['kelas'] . '&siswa=' . $_GET['siswa']);
     }
+} else if ($view == 'kaldik') {
+    if ($act == 'add') {
+        $tahun_ajaran = $_POST['tahun_ajaran'];
+        $namaFile = $_FILES['filename']['name'];
+        if ($namaFile) {
+            $allowed_extension = ['jpeg', 'jpg', 'png', 'webp'];
+            $tmp = $_FILES['filename']['tmp_name'];
+            $fileType = pathinfo($namaFile, PATHINFO_EXTENSION);
+            $jenis = explode(' ', $namaFile);
+            if (in_array(strtolower($fileType), $allowed_extension)) {
+                $uploadedName = randomStr(15) . '.' . $fileType;
+                move_uploaded_file($tmp, 'dist/kaldik/' . $uploadedName);
+                mysql_query("INSERT INTO rb_kaldik VALUES(null, '$tahun_ajaran', '$uploadedName')");
+                $_SESSION['alert'] = 'Tambah Data Berhasil';
+                $_SESSION['type'] = 'success';
+                header('location:index.php?view=' . $_GET['view']);
+            } else {
+                $_SESSION['alert'] = 'File Harus Gambar';
+                $_SESSION['type'] = 'danger';
+                header('location:index.php?view=' . $_GET['view']);
+            }
+        } else {
+            $_SESSION['alert'] = 'Tambah Data Gagal';
+            $_SESSION['type'] = 'danger';
+            header('location:index.php?view=' . $_GET['view']);
+        }
+    } else if ($act == 'delete') {
+        $id = $_POST['id'];
+        mysql_query("DELETE FROM rb_kaldik WHERE id = '" . $id . "'");
+        chmod('dist/kaldik/' . $_POST['filename'], 0777);
+        unlink('dist/kaldik/' . $_POST['filename']);
+        $_SESSION['alert'] = 'Hapus Data Berhasil';
+        $_SESSION['type'] = 'success';
+        header('location:index.php?view=' . $_GET['view']);
+    }
 } else {
     header('location:index.php');
 }

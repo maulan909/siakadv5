@@ -465,6 +465,24 @@ if (isset($_SESSION['id'])) {
                             ?>
                         </div>
                     <?php
+                    } else if ($view == 'kaldik') {
+                    ?>
+                        <div class="row">
+                            <?php
+                            if ($_SESSION['level'] == 'superuser') {
+                                include 'application/kaldik-superuser.php';
+                            } else if ($_SESSION['level'] == 'guru' || $_SESSION['level'] == 'guru') {
+                                include 'application/kaldik.php';
+                            } else {
+                            ?>
+                                <script>
+                                    window.location = 'index.php';
+                                </script>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    <?php
                     }
                     ?>
                 </section>
